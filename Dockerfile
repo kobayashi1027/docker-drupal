@@ -3,7 +3,9 @@ FROM php:7.0-apache
 MAINTAINER Hiroaki Kobayashi <koba1027yasho@gmail.com>
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN a2enmod rewrite
+# Setup apache
+RUN sed -i 's/DocumentRoot.*/DocumentRoot \/var\/www\/drupal\/web/' /etc/apache2/sites-available/000-default.conf
+RUN a2ensite 000-default && a2enmod rewrite
 
 # Install packages and PHP extensions
 RUN apt-get update && apt-get install -y \
@@ -38,9 +40,8 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer create-project drupal-composer/drupal-project:8.x-dev /var/www/drupal --stability dev --no-interaction
 RUN chown -R www-data:www-data /var/www
 
-# Setup apache
-RUN sed -i 's/DocumentRoot.*/DocumentRoot \/var\/www\/drupal\/web/' /etc/apache2/sites-available/000-default.conf
-RUN a2ensite 000-default
+# Set path of drush and drupal command
+ENV PATH /var/www/drupal/vendor/bin:$PATH
 
 # Other settings
 VOLUME /var/www/drupal/web/profiles \
