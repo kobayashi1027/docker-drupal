@@ -39,14 +39,10 @@ RUN rm -rf /var/www/html
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer create-project drupal-composer/drupal-project:8.x-dev /var/www/drupal --stability dev --no-interaction
 RUN chown -R www-data:www-data /var/www
+WORKDIR /var/www/drupal
 
 # Set path of drush and drupal command
 ENV PATH /var/www/drupal/vendor/bin:$PATH
 
-# Other settings
-VOLUME /var/www/drupal/web/profiles \
-       /var/www/drupal/web/sites \
-       /var/www/drupal/web/themes \
-       /var/www/drupal/web/modules
-EXPOSE 80
-WORKDIR /var/www/drupal
+# Set volumes
+VOLUME /var/www/drupal
