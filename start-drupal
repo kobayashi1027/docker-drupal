@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# Do pre-seeding if drupal directory is empty
+if [ -z "$(ls -A /var/www/drupal/)" ]
+then
+    cd /var/www/drupal && tar zxvf ~/drupal.tar.gz
+fi
+
+# Start apache
+exec apache2-foreground
